@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Sermons</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        object{
+            width: 40vw;
+            height: 25vw;
+            margin: 4vh 2.5vw;
+            background-color: rgb(227, 227, 227);
+            position: relative;
+            
+        }
+        .obj-container{
+            position: relative;
+            display: inline-block;
+            
+        }
+        .obj-container::before{
+            content: attr(data-name);
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            z-index: 999;
+            user-select: all;
+            font-size: 1.5em;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+        nav{
+            background-color: #303030;
+            padding: 32px 0; 
+            display: flex;
+            justify-content: right;
+        }
+        nav a{
+            font-family: sans-serif;
+            font-size: 1.3rem;
+            text-decoration: none;
+            margin: 0 1vw;
+            font-weight: 600;
+            color: white;
+        }
+        #center{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #vidWrapper{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        a.active{
+            border-bottom: 2px solid white;
+            margin-right: 2vw
+        }
+        @media only screen and (max-width: 600px) {
+            object{
+            width: 80vw;
+            height: 50vw;
+            overflow: hidden;
+            margin: 4vh 10vw;
+            background-color: rgb(185, 185, 185);
+        }
+        .obj-container::before{
+            font-size: 1em;
+            bottom: 8vw;
+        }
+        nav{
+            justify-content: left;
+        }
+        nav a{
+            font-size: 1rem;
+        }
+        .desktop{
+            display: none;
+        }
+        .home{
+            margin-left: 4vw;
+        }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a class="home" href="https://cartersvilleoutreach.org">Home</a>
+        <a class="desktop" href="https://cartersvilleoutreach.org">Location</a>
+        <a class="desktop"  href="https://cartersvilleoutreach.org">What We Believe</a>
+        <a class="desktop"  href="https://cartersvilleoutreach.org">Pastors</a>
+        <a  class="desktop" href="https://cartersvilleoutreach.org">Transitional Center</a>
+        <a  class="active" href="https://cartersvilleoutreach.org">Past Sermons</a>
+    </nav>
+    <div id="center">
+    <div id="vidWrapper"></div>
+</div>
+
+    <script
+    src="https://code.jquery.com/jquery-3.6.3.min.js"
+    integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <script>
+        const pastVideos = [ 
+            {id: "1935094646833986",
+            name: "BE READY"},
+            {id: "5422401461199917",
+            name: "SUNDAY NIGHT SERVICE"},
+            {id: "3379740238905645",
+            name: "THE GIFTS OF THE SPIRIT PT 1"},
+            {id: "589500649375525",
+            name: "DO NOT LOVE THE WORLD"},
+            {id: "849849212747922",
+            name: "JESUS CAME WITH POWER"},
+            {id: "1153855531878917",
+            name: "THE MEANING OF THE LORD’S PRAYER"},
+            {id: "1663176924138777",
+            name: "TO LIVE FOR GOD"},
+            {id: "876367196935449",
+            name: "WEDNESDAY NIGHT SERVICE"},
+            {id: "697522558686500",
+            name: "JESUS IS ALL YOU NEED"},
+            ]; 
+
+        const body = document.getElementsByTagName("body")[0];
+        const wrapper = document.getElementById("vidWrapper");
+        pastVideos.forEach((video) => {
+            const currentHTML = `<div class="obj-container" ><object data-name="${video.name}" class="load-lazy" data-src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2F100066217855994%2Fvideos%2F${video.id}%2F&show_text=false&width=0&t=0" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></object></div>`;
+
+            wrapper.insertAdjacentHTML("beforeend", currentHTML)
+        });
+        /*
+ Program: minLazyLoad.js
+ Creator: William Bojczuk (wiliambojczuk@gmail.com)
+ Github: https://github.com/wbojczuk
+ */
+const lazyLoadObj = {
+    // System to only load elements that are in user's viewport
+    lazyLoadElems: ()=>{
+        // Observer Object
+        const lazyObserver = new IntersectionObserver(
+            (entries)=>{
+                entries.forEach((entry)=>{
+                    if(entry.isIntersecting){
+                        lazyObserver.unobserve(entry.target);
+                        lazyLoad(entry.target);
+                    }
+                })
+            },{
+                // Loads if image is x% in the viewport
+                threshold: .10
+            }
+        );
+        // Function to load elem
+        function lazyLoad(elem){
+            
+            elem.data = elem.dataset.src;
+            elem.onload = ()=>{
+                elem.style.backgroundColor = "transparent";
+                elem.parentElement.dataset.name = elem.dataset.name;
+            }
+        }
+            // Observe all lazy elements
+        const allElems = document.querySelectorAll(".load-lazy");
+        allElems.forEach((curElem)=>{
+            lazyObserver.observe(curElem);
+        });
+    }
+};
+lazyLoadObj.lazyLoadElems();
+    </script>
+
+    
+    <!-- <script>
+        const pattern = "facebook.com/100066217855994/videos/1663176924138777/";
+        const vidText = ``;
+
+        console.log( vidText.match( /(?<=videos\/)\d{1,}/gi ) );
+
+    </script> -->
+    
+</body>
+</html>
